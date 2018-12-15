@@ -1,31 +1,69 @@
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StatusBar, StyleSheet, SectionList, Text, FlatList, View } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { SafeAreaView } from 'react-navigation';
-import ActivityLoader from '../../common/ActivityLoader';
 import { getVideos } from '../actions';
-import _ from 'lodash';
+import ActivityLoader from '../../common/ActivityLoader';
+import Thumbnail from './Thumbnail';
 
 class Videos extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      videos: []
+    };
   }
 
   static getDerivedStateFromProps(props) {
-    return null;
+    return {
+      videos: props.videos
+    };
   }
 
   componentDidMount() {
-    this.props.getVideos();
+    if (this.props.videos.length === 0) this.props.getVideos();
+  }
+
+  _renderHeader() {
+    return (
+      <View>
+        <Text style={styles.pageTitle}>Videos</Text>
+      </View>
+    );
+  }
+
+  _renderSectionHeader(title) {
+    return (
+      <View style={styles.sectionHeader} key={title}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+      </View>
+    );
+  }
+
+  _renderSection(item, index, section) {
+    return <Thumbnail video={item} key={'VIDEO_' + item.id} />;
+  }
+
+  renderSections() {
+    return (
+      <SectionList
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
+        stickySectionHeadersEnabled={true}
+        ListHeaderComponent={this._renderHeader()}
+        renderItem={({ item, index, section }) => this._renderSection(item, index, section)}
+        renderSectionHeader={({ section: { title } }) => this._renderSectionHeader(title)}
+        sections={this.state.videos}
+        keyExtractor={(item, index) => item + index}
+      />
+    );
   }
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor='#FFFFFF' barStyle='dark-content' />
-        
+        {this.props.isLoading ? <ActivityLoader loading={true} /> : this.renderSections()}
       </SafeAreaView>
     );
   }
@@ -53,41 +91,19 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#FFF',
-    justifyContent: 'center'
+    backgroundColor: '#FFF'
   },
-  card: {
-    padding: 10,
-    marginVertical: 5,
-    borderColor: '#CCC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginHorizontal: 10
-  },
-  cardContainer: {
-    flex: 1,
-    padding: 10,
-    flexDirection: 'column'
-  },
-  cardBody: {
-    flex: 1
-  },
-  cardFooter: {
-    flexDirection: 'row'
-  },
-  cardTitle: {
+  pageTitle: {
     fontFamily: 'product-sans-regular',
-    fontSize: 24
+    padding: 10,
+    fontSize: 40
   },
-  footerButton: {
-    flex: 1,
-    borderRadius: 5
+  sectionHeader: {
+    backgroundColor: '#FFFFFF'
   },
-  footerButtonText: {
+  sectionTitle: {
     fontFamily: 'product-sans-regular',
-    fontSize: 18,
-    textAlign: 'center',
-    color: '#FFFFFF',
-    padding: 10
+    padding: 10,
+    fontSize: 22
   }
 });

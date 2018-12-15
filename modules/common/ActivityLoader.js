@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
 
-class ActivityLoader extends Component {
+class ActivityLoader extends PureComponent {
   render() {
     return (
       <Modal

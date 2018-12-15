@@ -1,7 +1,7 @@
 import { GET_VIDEOS, ON_GET_VIDEOS_FAILURE, ON_GET_VIDEOS_SUCCESS } from './actionTypes';
 
 export const videos = (
-  state = { data: null, error: null, isLoading: false },
+  state = { data: [], error: null, isLoading: false },
   { type, payload }
 ) => {
   switch (type) {
@@ -14,7 +14,7 @@ export const videos = (
       return {
         ...state,
         isLoading: false,
-        data: payload
+        data: payload[0].categories
       };
     case ON_GET_VIDEOS_FAILURE:
       return {

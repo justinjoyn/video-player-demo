@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "video-player-demo",
+    "name": "Video Player Demo",
     "slug": "video-player-demo",
     "privacy": "public",
     "sdkVersion": "31.0.0",
