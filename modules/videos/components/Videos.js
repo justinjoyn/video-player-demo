@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet, SectionList, Text, FlatList, View } from 'react-native';
+import { SectionList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getVideos } from '../actions';
 import ActivityLoader from '../../common/ActivityLoader';
+import { getVideos } from '../actions';
 import Thumbnail from './Thumbnail';
 
 class Videos extends Component {
@@ -41,8 +41,18 @@ class Videos extends Component {
     );
   }
 
+  onPlayClicked(video) {
+    this.props.navigation.navigate('Player', { video: video });
+  }
+
   _renderSection(item, index, section) {
-    return <Thumbnail video={item} key={'VIDEO_' + item.id} />;
+    return (
+      <Thumbnail
+        video={item}
+        key={'VIDEO_' + item.id}
+        onPlayClicked={this.onPlayClicked.bind(this)}
+      />
+    );
   }
 
   renderSections() {
@@ -63,6 +73,7 @@ class Videos extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar hidden />
         {this.props.isLoading ? <ActivityLoader loading={true} /> : this.renderSections()}
       </SafeAreaView>
     );
