@@ -59,7 +59,7 @@ class Videos extends Component {
     return (
       <SectionList
         showsVerticalScrollIndicator={false}
-        removeClippedSubviews={true}
+        removeClippedSubviews={false}
         stickySectionHeadersEnabled={true}
         ListHeaderComponent={this._renderHeader()}
         renderItem={({ item, index, section }) => this._renderSection(item, index, section)}
